@@ -11,8 +11,10 @@
   "license": "ISC",
   "dependencies": {
     "react": "^0.14.8",
-    "react-bootstrap": "^0.28.3",
+    "react-addons-pure-render-mixin": "^0.14.8",
+    "react-date-range": "^0.2.4",
+    "react-daterange-picker": "^1.0.0",
     "react-dom": "^0.14.8",
-    "react-mounter": "^1.1.0"
+    "react-router": "^2.0.1"
   }
 }
