@@ -41,17 +41,18 @@
 .details {
     margin: 20px;
     padding: 10px;
-}
+    
+    .calendar {
+        border: solid 1px lightgray;
+        width: 285px;
+    }
 
-.calendar {
-    border: solid 1px lightgray;
-    width: 285px;
-}
+    table tr {
+        transition: background-color 1s linear;
+    }
 
-.text-button {
-    background:none!important;
-    border:none; 
-    padding:0!important;
-    font: inherit;
-    cursor: pointer;
+    tr.slots-enter
+    {
+        background-color:#dff0d8 !important;    
+    }
 }

@@ -8,25 +8,25 @@ class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {name: props.params.name};
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
     this.handleDateSelect = this.handleDateSelect.bind(this);
   }
   
-  handleSubmit(e) {
-    e.preventDefault();
+  handleBlur(e) {
+    let signupSets = {};
+    signupSets[e.target.id] = e.target.value;
     SignUpsData.update(this.props.signup._id, {
-      $set: { description: this.refs.description.value }
+      $set: signupSets
     });
   }
   
   handleDateSelect(d) {
-    SlotsData.insert({ signupId: this.props.signup._id, date: d.toJSON()});
+    SlotsData.insert({ signupId: this.props.signup._id, date: d.format("YYYY-MM-DD")});
   }
   
   render() {
-    return <div className="details">
-        <h1>Signup Details</h1>
-        <form type="get" onSubmit={this.handleSubmit}>
+    return <div className="details" onBlur={this.handleBlur}>
+        <h1>New Signup</h1>
         <div className="container-fluid">
           <div className="row">
             <div className="col-md-6"> 
@@ -35,21 +35,23 @@ class SignUp extends Component {
                   <input className="form-control" type="text" id="name" defaultValue={this.props.signup.name} />
               </div>
               <div className="form-group">
-                  <label htmlFor="description">Description</label>
-                  <textarea className="form-control" id="description" ref="description" defaultValue={this.props.signup.description} rows="3"/>
+                  <label htmlFor="details">Details</label>
+                  <textarea className="form-control" rows="3" id="details" defaultValue={this.props.signup.details}/>
               </div>
             </div>
             <div className="col-md-6">
+            <h2>Dates</h2>
               <div className="calendar">
-              <Calendar onInit={this.handleDateSelect} onChange={this.handleDateSelect} />
+              <Calendar onChange={this.handleDateSelect} />
               </div>
+              <i>Click calendar days above to add signup dates.</i>
             </div>
           </div>
           <h2>Slots</h2>
-           {this.props.isAnySlots ? <Slots slots={this.props.slots} /> : ''}
-          <button className="btn btn-success btn-lg" type="Submit">Save</button>
+           {this.props.isAnySlots ? 
+               <Slots slots={this.props.slots} /> : 
+               <div className="alert alert-info" role="alert">There are currently no signup slots because no dates have been selected. To add signup slots, click dates on the calendar.</div>}
         </div>
-        </form>
     </div>;
   } 
 }
@@ -61,7 +63,7 @@ export default createContainer(({ params: { name } }) => {
       SignUpsData.insert(signup);
     }
     
-  let slots = SlotsData.find({ signupId: signup._id })
+  let slots = SlotsData.find({ signupId: signup._id }, { sort: { date: 1} })
     
   return {
     signup: signup,
