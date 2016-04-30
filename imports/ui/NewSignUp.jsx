@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
+import { SignUpsData } from '../api/signups.js';
 
 export class NewSignUp extends Component {
   constructor() {
@@ -8,6 +9,11 @@ export class NewSignUp extends Component {
   }
 
   handleClick() {
+    let signup = SignUpsData.findOne({ name: this.refs.name.value });
+    if (!signup) {
+      signup = { name: this.refs.name.value };
+      SignUpsData.insert(signup);
+    }
     browserHistory.push(`/new/${this.refs.name.value}`);
   }
   

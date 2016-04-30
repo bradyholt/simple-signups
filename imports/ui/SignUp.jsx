@@ -25,7 +25,7 @@ class SignUp extends Component {
   }
   
   render() {
-    return <div className="details" onBlur={this.handleBlur}>
+    return this.props.signup ? <div className="details" onBlur={this.handleBlur}>
         <h1>New Signup</h1>
         <div className="container-fluid">
           <div className="row">
@@ -52,22 +52,17 @@ class SignUp extends Component {
                <Slots slots={this.props.slots} /> : 
                <div className="alert alert-info" role="alert">There are currently no signup slots because no dates have been selected. To add signup slots, click dates on the calendar.</div>}
         </div>
-    </div>;
+    </div> : <div></div>;
   } 
 }
 
 export default createContainer(({ params: { name } }) => {
-  let signup = SignUpsData.findOne({ name: name });
-    if (!signup) {
-      signup = { name: name };
-      SignUpsData.insert(signup);
-    }
+    let signup = SignUpsData.findOne({ name: name });
+    let slots = SlotsData.find({ signupId: (signup && signup._id || "") }, { sort: { date: 1} });
     
-  let slots = SlotsData.find({ signupId: signup._id }, { sort: { date: 1} })
-    
-  return {
-    signup: signup,
-    isAnySlots: slots.count() > 0,
-    slots: slots.fetch()
-  };
+    return {
+      signup: signup,
+      isAnySlots: (slots && slots.count() > 0),
+      slots: slots
+    } 
 }, SignUp);
