@@ -7,7 +7,7 @@ import SignUp from '../../ui/SignUp.jsx';
 export const renderRoutes = () => (
   <Router history={browserHistory}>
     <Route path="/" component={NewSignUp}/>
-    <Route path="/new/:name" component={SignUp}/>
+    <Route path="/:id" component={SignUp}/>
       {/*<Route path="*" component={NotFoundPage}/>*/}
   </Router>
 );
